@@ -1,0 +1,65 @@
+.link-image-profile{
+    height: auto!important;
+}
+.image-profile{
+    content:' ';
+    display: inline-block;
+    vertical-align:middle;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    line-height: 1em;
+}
+.image-profile-31{
+    width: 31px;
+    height: 31px;
+}
+.image-profile-50{
+    width: 50px;
+    height: 50px;
+}
+.image-profile-60{
+    width: 60px;
+    height: 60px;
+}
+.image-profile-150{
+    width: 150px;
+    height: 150px;
+}
+.sosmed-icon{
+    font-size: 1rem;
+    margin-right: .5rem;
+}
+@media (max-width: 575.98px) {
+    .attendence-icon{
+        font-size: 1.5rem;
+    }
+    .sidebar-nav>ul>li.selected>a{
+        background: #17a991!important;
+        color: #fff!important;
+    }
+    .sidebar-nav>ul>li.selected>a>i{
+        color: #fff!important;
+    }
+}
+@media (min-width: 576px){
+  .attendence-icon{
+    font-size: 2rem;
+    line-height: 1 !important;
+  }
+}
+.dropdown-menu.dropdown-menu-right a.dropdown-item{
+line-height: 1;
+}
+.editor-form{
+    height: 200px !important;
+}
+.editor-form strong{
+    font-weight: bold!important;
+}
+[data-layout="vertical"] .sidebar-nav>ul>li.selected>a{
+    background: #17a991!important;
+}
+.nowrap {
+        white-space:nowrap!important;
+    }
