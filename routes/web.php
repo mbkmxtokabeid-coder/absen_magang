@@ -1,5 +1,7 @@
 <?php
-header("Access-Control-Allow-Origin: *");
+if (php_sapi_name() !== 'cli') {
+    header("Access-Control-Allow-Origin: *");
+}
 
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\UserController;
@@ -208,3 +210,13 @@ Route::group(['middleware' => 'App\Http\Middleware\Supervisor'], function () {
   Route::get('/apprentices/{usernName}/{userId}/jobdesk', [UserController::class, 'superjobdesk']);
   Route::post('/aprentices/tambah/', [UserController::class, 'superaddJobDesk'])->name('supervisor.jobdesk.tambah');
 });
+
+// Serve storage files dynamically (for Hostinger environment without symlink)
+Route::get('/storage/{path}', function ($path) {
+    $filePath = storage_path('app/public/' . $path);
+    if (!file_exists($filePath)) {
+        abort(404);
+    }
+    $mimeType = mime_content_type($filePath);
+    return response()->file($filePath, ['Content-Type' => $mimeType]);
+})->where('path', '.*');

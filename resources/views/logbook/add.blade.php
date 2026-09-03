@@ -103,10 +103,10 @@
                 <input type="file" name="images[]" id="images" placeholder="Choose images" multiple>
               </div>
               <div class="col-sm-12 col-md-4 col-lg-4">
-                <!-- <h5 class="">Tanggal aktual</h5> -->
-                <!-- <div class="mb-4">
-                  <input type="text" class="form-control pickadate-datelimits" id="actual_date" name="actual_date" placeholder="Pilih tanggal aktual" value="{{ isset($logData) ? date('d F, Y', strtotime($logData->date)) : '' }}">
-                </div> -->
+                <h5 class="">Tanggal</h5>
+                <div class="mb-4">
+                  <input type="text" class="form-control pickadate-datelimits" id="actual_date" name="actual_date" placeholder="Pilih tanggal" value="{{ isset($logData) ? date('d F, Y', strtotime($logData->date)) : date('d F, Y') }}">
+                </div>
 
                 <hr class="mb-5">
                 <h5 class="">Durasi pengerjaan</h5>
@@ -291,6 +291,7 @@
     }
     // add total gambar dan beberapa data ke form data
     formData.append('TotalImages', TotalImages);
+    formData.append('actual_date', $('#actual_date').val());
     formData.append('activity', $('#activityEditor .ql-editor').html());
     formData.append('obstacles', $('#obstacleEditor .ql-editor').html());
     formData.append('duration', `${$('#activity_time').val()} ${$('input[name="time_type"]:checked').val()}`);
@@ -339,9 +340,9 @@
 
 @if(isset($logData))
 <script type="text/javascript">
-  // Load Activity and Obstacle to Their Editor
-  $('#activityEditor .ql-editor').html("{!! $logData->activity !!}");
-  $('#obstacleEditor .ql-editor').html("{!! $logData->obstacles !!}");
+  // Load Activity and Obstacle to Their Editor safely using json_encode
+  activityEditor.root.innerHTML = {!! json_encode($logData->activity) !!};
+  obstacleEditor.root.innerHTML = {!! json_encode($logData->obstacles) !!};
 </script>
 @endif
 @endsection

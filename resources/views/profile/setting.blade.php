@@ -594,12 +594,12 @@
         contentType: false,
         processData: false,
         beforeSend: ()=> {
-          $('#propic').text("Waiting");
-          $('#propic').prop('disabled', true);
+          $('#save-propic').text("Waiting...");
+          $('#save-propic').prop('disabled', true);
         },  
         success: (data) => {
-          $('#propic').html('<span class="ti-save mr-2"></span>Simpan');
-          $('#propic').prop('disabled', false);
+          $('#save-propic').html('<span class="ti-save mr-2"></span>Simpan');
+          $('#save-propic').prop('disabled', false);
           if (data.success) {
             swal("Sukses", "Foto Profil berhasil diperbarui!", "success")
               .then(() => {
@@ -608,6 +608,11 @@
           } else {
             swal("Error", data.msg, "error");
           }
+        },
+        error: () => {
+          $('#save-propic').html('<span class="ti-save mr-2"></span>Simpan');
+          $('#save-propic').prop('disabled', false);
+          swal("Error", "Gagal mengunggah foto profil", "error");
         }
       });
     }

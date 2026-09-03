@@ -16,7 +16,47 @@ define('LARAVEL_START', microtime(true));
 |
 */
 
-if (file_exists($maintenance = __DIR__.'/../absensi_bckend/storage/framework/maintenance.php')) {
+$possiblePaths = [
+    __DIR__.'/..',
+    __DIR__.'/../absensi_bckend',
+    __DIR__.'/../absensi_backend',
+    __DIR__.'/../../absensi_bckend',
+    __DIR__.'/../../absensi_backend',
+    __DIR__.'/../..',
+];
+
+$basePath = __DIR__.'/..';
+foreach ($possiblePaths as $path) {
+    if (file_exists($path.'/bootstrap/app.php')) {
+        $basePath = $path;
+        break;
+    }
+}
+
+if (!file_exists($basePath.'/.env')) {
+    if (file_exists(__DIR__.'/.env')) {
+        @copy(__DIR__.'/.env', $basePath.'/.env');
+    } elseif (file_exists(__DIR__.'/../.env')) {
+        @copy(__DIR__.'/../.env', $basePath.'/.env');
+    }
+}
+
+if (!file_exists($basePath.'/.env')) {
+    die("<div style='font-family:sans-serif; padding:30px; background:#fff3cd; color:#856404; border:1px solid #ffeba2; border-radius:8px; margin:50px auto; max-width:600px;'><h2>File .env Belum Ditemukan di Server Hostinger!</h2><p>File <b>.env</b> tidak ditemukan di folder: <code>".$basePath."/</code></p><p>Silakan buat file bernama <b>.env</b> di dalam folder tersebut melalui Hostinger File Manager dan isi kredensial database Hostinger kamu.</p></div>");
+}
+
+if (file_exists($configCache = $basePath.'/bootstrap/cache/config.php')) {
+    @unlink($configCache);
+}
+
+$viewCacheDir = $basePath . '/storage/framework/views';
+if (is_dir($viewCacheDir)) {
+    foreach (glob($viewCacheDir . '/*.php') as $viewFile) {
+        @unlink($viewFile);
+    }
+}
+
+if (file_exists($maintenance = $basePath.'/storage/framework/maintenance.php')) {
     require $maintenance;
 }
 
@@ -31,8 +71,7 @@ if (file_exists($maintenance = __DIR__.'/../absensi_bckend/storage/framework/mai
 |
 */
 
-require __DIR__.'/../absensi_bckend/vendor/autoload.php';
-//require __DIR__.'/../vendor/autoload.php';
+require $basePath.'/vendor/autoload.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -45,8 +84,7 @@ require __DIR__.'/../absensi_bckend/vendor/autoload.php';
 |
 */
 
-$app = require_once __DIR__.'/../absensi_bckend/bootstrap/app.php';
-//$app = require_once __DIR__.'/../bootstrap/app.php';
+$app = require_once $basePath.'/bootstrap/app.php';
 
 $kernel = $app->make(Kernel::class);
 

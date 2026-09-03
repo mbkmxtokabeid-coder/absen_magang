@@ -63,3 +63,26 @@ line-height: 1;
 .nowrap {
         white-space:nowrap!important;
     }
+
+/* Mobile responsive table and header fixes */
+@media (max-width: 767.98px) {
+    .topbar .navbar-header {
+        width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+    }
+    .table-responsive {
+        display: block;
+        width: 100%;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+    }
+    .table-responsive table {
+        min-width: 750px !important;
+        table-layout: auto !important;
+    }
+    .table-responsive th, .table-responsive td {
+        word-wrap: normal !important;
+    }
+}

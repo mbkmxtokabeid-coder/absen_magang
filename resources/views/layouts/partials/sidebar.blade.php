@@ -19,7 +19,7 @@
             <div class="user-profile dropdown m-t-20">
               <div class="user-pic">
                 @if (Route::has('login') && Auth::user()->profile_photo_url != null)
-                <span class="image-profile image-profile-60 rounded-circle" style="background-image:url({{ url(Auth::user()->profile_photo_url) }});"></span>
+                <span class="image-profile image-profile-60 rounded-circle" style="background-image:url({{ Auth::user()->profile_photo_url }}); display: inline-block; width: 60px; height: 60px; background-size: cover; background-position: center;"></span>
                 @endif
               </div>
               <div class="user-content hide-menu m-t-10">

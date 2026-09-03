@@ -256,10 +256,13 @@ public function store(Request $req)
       'propic' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
     ]);
     if($req->file('propic')) {
-      $extension = substr($req->file('propic')->getClientOriginalName(), -4, 4);
-      $imgName = Auth::id() . $extension;
-      if($user->profile_photo_path != null){
-        unlink(storage_path() . '/app/public/' . $user->profile_photo_path);
+      $ext = $req->file('propic')->getClientOriginalExtension();
+      $imgName = Auth::id() . '.' . $ext;
+      if($user->profile_photo_path != null && file_exists(storage_path('app/public/' . $user->profile_photo_path))){
+        @unlink(storage_path('app/public/' . $user->profile_photo_path));
+      }
+      if(!file_exists(storage_path('app/public/profile-photos'))){
+        @mkdir(storage_path('app/public/profile-photos'), 0777, true);
       }
       $path = $req->file('propic')->storeAs('profile-photos', $imgName, 'public');
 

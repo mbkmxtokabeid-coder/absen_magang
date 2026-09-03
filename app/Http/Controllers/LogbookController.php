@@ -17,6 +17,30 @@ class LogbookController extends Controller
   {
     $attendenceData = AttendenceController::getAttendenceToday();
     $logbooks = Logbook::where('user_id', Auth::id())->get();
+    
+    $months = [
+      'januari' => '01', 'februari' => '02', 'maret' => '03', 'april' => '04',
+      'mei' => '05', 'juni' => '06', 'juli' => '07', 'agustus' => '08',
+      'september' => '09', 'oktober' => '10', 'november' => '11', 'desember' => '12'
+    ];
+
+    foreach ($logbooks as $logbook) {
+      if (empty($logbook->date) || strtotime($logbook->date) <= 0 || date('Y', strtotime($logbook->date)) <= 1975) {
+        if (preg_match('/(\d{1,2})\s+([a-zA-Z]+)\s+(\d{4})/', strip_tags($logbook->activity), $matches)) {
+          $day = str_pad($matches[1], 2, '0', STR_PAD_LEFT);
+          $monthStr = strtolower($matches[2]);
+          $year = $matches[3];
+          if (isset($months[$monthStr])) {
+            $logbook->date = "$year-{$months[$monthStr]}-$day";
+            try {
+              $logbook->save();
+            } catch (\Exception $e) {}
+          }
+        }
+      }
+    }
+
+    $logbooks = Logbook::where('user_id', Auth::id())->orderBy('date', 'asc')->get();
     return view('logbook/index', ['attendenceStatus' => $attendenceData->login_status, 'attendenceMessage' => $attendenceData->message, 'logbooks' => $logbooks]);
   }
   function add()
@@ -38,7 +62,7 @@ class LogbookController extends Controller
   {
     // dd($req);
     $this->validasi($req);
-    $date = Carbon::now()->addHours(7);
+    $date = !empty($req->actual_date) ? date('Y-m-d', strtotime(str_replace('-', '/', $req->actual_date))) : Carbon::now()->addHours(7);
     // $date = date('Y-m-d', strtotime(str_replace('-', '/','now')));
     try {
       // Upload images and create multipath
@@ -81,8 +105,8 @@ class LogbookController extends Controller
     $this->validasi($req);
 
     try {
-       $date = date('Y-m-d', strtotime(str_replace('-', '/', $req->actual_date)));
-      $logbook = Logbook::find($req->id);
+       $logbook = Logbook::find($req->id);
+      $date = !empty($req->actual_date) ? date('Y-m-d', strtotime(str_replace('-', '/', $req->actual_date))) : $logbook->date;
       if ($req->TotalImages > 0) {
         $images = '';
         // Remove old image data, if available
